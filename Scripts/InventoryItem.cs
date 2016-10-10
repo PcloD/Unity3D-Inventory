@@ -83,9 +83,14 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnBeginDrag(PointerEventData eventData)
     {
         //Debug.Log("OnBeginDrag: 拖动事件：" + eventData.position);
+        if (this.inventory==null)
+        {
+            return;
+        }
         m_DraggingIcon = new GameObject("Drag");
         m_DraggingIcon.transform.SetParent(this.transform.parent.parent, false);
         m_DraggingIcon.AddComponent<Image>().sprite = image.sprite;
+        m_DraggingIcon.AddComponent<CanvasGroup>().blocksRaycasts = false;
 
     }
     public void OnDrag(PointerEventData eventDate)
@@ -106,9 +111,28 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     }
     public void OnEndDrag(PointerEventData eventData)
     {
+
+        //将事件处理上传到GirdManager
+
         if (m_DraggingIcon != null)
         {
             Destroy(m_DraggingIcon);
         }
+        GameObject go = eventData.pointerCurrentRaycast.gameObject;
+        //go.transform.position = Vector3.zero;
+        //Debug.Log(go.name);
+        if (go!=null)
+        {
+            GirdManager._Instance.ChangeGirdItem(this, go.GetComponentInParent<InventoryItem>());
+        }
+        
+        
+    }
+
+
+
+    public void Clear()
+    {
+        Init();
     }
 }

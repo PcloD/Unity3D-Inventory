@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class GirdManager : MonoBehaviour
 {
+    public static GirdManager _Instance;
 
     public GameObject InventoryItemPrefeb;
     public Scrollbar ScrollBar;
@@ -13,6 +14,12 @@ public class GirdManager : MonoBehaviour
 
     //最大格子数量
     public int MAXNUM = 28;
+
+
+    void Awake()
+    {
+        _Instance = this;
+    }
 
     void Start()
     {
@@ -129,4 +136,54 @@ public class GirdManager : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// 交换两个item
+    /// </summary>
+    /// <param name="drag">拖拽的</param>
+    /// <param name="drop">覆盖的</param>
+    public void ChangeGirdItem(InventoryItem drag,InventoryItem drop)
+    {
+
+        if (drop.Inventory == null)
+        {
+            drop.SetInventory(drag.Inventory, drag.count);
+            drag.Clear();
+        }
+        else
+        {
+            Inventory tempInventory = drop.Inventory;
+            int tempCount = drop.count;
+
+
+            drop.SetInventory(drag.Inventory, drag.count);
+            drag.SetInventory(tempInventory, tempCount);
+        }
+
+       
+
+    }
+
+    /// <summary>
+    /// 整理按钮点击事件TODO
+    /// </summary>
+    public void CleanUp()
+    {
+        Debug.Log("CleanUp");
+
+        //排出空格
+        //按照类型排列
+
+        int temp = 0;
+
+        for (int i = 0; i < InventoryGirdList.Count; i++)
+        {
+            Inventory item = InventoryGirdList[i].Inventory;
+            //InventoryGirdList[i].SetInventory(item);
+        }
+
+        
+
+        
+    }
 }
